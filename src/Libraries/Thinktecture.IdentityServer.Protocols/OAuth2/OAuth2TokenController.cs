@@ -114,11 +114,12 @@ namespace Thinktecture.IdentityServer.Protocols.OAuth2
             CodeToken token;
             if (CodeTokenRepository.TryGetCode(codeToken, out token))
             {
+                CodeTokenRepository.DeleteCode(token.Code);
+
                 // 2. make sure the client is the same - if not: error
                 if (token.ClientId == client.ID)
                 {
                     // 3. call STS 
-                    CodeTokenRepository.DeleteCode(token.Code);
                     return CreateTokenResponse(token.UserName, client, new EndpointReference(token.Scope), tokenType, includeRefreshToken: client.AllowRefreshToken);
                 }
 
@@ -219,6 +220,7 @@ namespace Thinktecture.IdentityServer.Protocols.OAuth2
                 if (!ConfigurationRepository.OAuth2.EnableCodeFlow ||
                     !client.AllowCodeFlow)
                 {
+                    Tracing.Error("Code flow not allowed for client");
                     return OAuthErrorResponseMessage(OAuth2Constants.Errors.UnsupportedGrantType);
                 }
             }
@@ -228,6 +230,7 @@ namespace Thinktecture.IdentityServer.Protocols.OAuth2
                 if (!ConfigurationRepository.OAuth2.EnableResourceOwnerFlow ||
                     !client.AllowResourceOwnerFlow)
                 {
+                    Tracing.Error("Resource owner password flow not allowed for client");
                     return OAuthErrorResponseMessage(OAuth2Constants.Errors.UnsupportedGrantType);
                 }
             }
@@ -236,6 +239,7 @@ namespace Thinktecture.IdentityServer.Protocols.OAuth2
             {
                 if (!client.AllowRefreshToken)
                 {
+                    Tracing.Error("Refresh tokens not allowed for client");
                     return OAuthErrorResponseMessage(OAuth2Constants.Errors.UnsupportedGrantType);
                 }
             }

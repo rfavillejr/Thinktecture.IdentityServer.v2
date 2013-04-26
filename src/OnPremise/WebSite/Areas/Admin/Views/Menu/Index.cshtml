@@ -17,10 +17,13 @@
         @Html.ActionLink(Index_cshtml.RelyingPartiesResources, "Index", "RP")
         @Html.Action("ChildMenu", "Menu", new{controllerName="RP"})
     </li>
-    <li>
-        @Html.ActionLink(Index_cshtml.IdentityProviders, "Index", "IP")
-        @Html.Action("ChildMenu", "Menu", new{controllerName="IP"})
-    </li>
+    @if(Model.ShowIdentityProviders)
+    {
+        <li>
+            @Html.ActionLink(Index_cshtml.IdentityProviders, "Index", "IP")
+            @Html.Action("ChildMenu", "Menu", new{controllerName="IP"})
+        </li>
+    }
     @if(Model.ShowOAuthClients)
     {
         <li>
@@ -38,6 +41,12 @@
 <ul>
     <li>@Html.ActionLink(Index_cshtml.Roles, "Index", "Role")</li>
     <li>@Html.ActionLink(Index_cshtml.Users, "Index", "User")</li>
-    <li>@Html.ActionLink(Index_cshtml.ClientCertificates, "Index", "ClientCertificate")</li>
-    <li>@Html.ActionLink(Index_cshtml.IdentityDelegation, "Index", "Delegation")</li>
+    @if(Model.ShowClientCerts)
+    {
+        <li>@Html.ActionLink(Index_cshtml.ClientCertificates, "Index", "ClientCertificate")</li>
+    }
+    @if(Model.ShowIdentityDelegation)
+    {
+        <li>@Html.ActionLink(Index_cshtml.IdentityDelegation, "Index", "Delegation")</li>
+    }
 </ul>
