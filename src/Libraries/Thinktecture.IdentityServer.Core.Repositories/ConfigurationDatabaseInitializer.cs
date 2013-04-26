@@ -33,6 +33,7 @@ namespace Thinktecture.IdentityServer.Repositories.Sql
                         context.OAuth2.Add(CreateTestOAuth2Configuration());
                         context.AdfsIntegration.Add(CreateTestAdfsIntegrationConfiguration());
                         context.SimpleHttp.Add(CreateTestSimpleHttpConfiguration());
+                        context.Sitefinity.Add(CreateTestSitefinityConfiguration());
                         context.Diagnostics.Add(CreateTestDiagnosticsConfiguration());
 
                         // test data
@@ -55,6 +56,7 @@ namespace Thinktecture.IdentityServer.Repositories.Sql
             context.OAuth2.Add(CreateDefaultOAuth2Configuration());
             context.AdfsIntegration.Add(CreateDefaultAdfsIntegrationConfiguration());
             context.SimpleHttp.Add(CreateDefaultSimpleHttpConfiguration());
+            context.Sitefinity.Add(CreateDefaultSitefinityConfiguration());
             context.Diagnostics.Add(CreateDefaultDiagnosticsConfiguration());
         }
 
@@ -141,6 +143,14 @@ namespace Thinktecture.IdentityServer.Repositories.Sql
         private static SimpleHttpConfiguration CreateDefaultSimpleHttpConfiguration()
         {
             return new SimpleHttpConfiguration
+            {
+                Enabled = false
+            };
+        }
+
+        private static SitefinityConfiguration CreateDefaultSitefinityConfiguration()
+        {
+            return new SitefinityConfiguration
             {
                 Enabled = false
             };
@@ -243,6 +253,14 @@ namespace Thinktecture.IdentityServer.Repositories.Sql
         private static SimpleHttpConfiguration CreateTestSimpleHttpConfiguration()
         {
             return new SimpleHttpConfiguration
+            {
+                Enabled = true
+            };
+        }
+
+        private static SitefinityConfiguration CreateTestSitefinityConfiguration()
+        {
+            return new SitefinityConfiguration
             {
                 Enabled = true
             };
