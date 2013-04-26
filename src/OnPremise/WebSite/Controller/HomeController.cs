@@ -122,6 +122,12 @@ namespace Thinktecture.IdentityServer.Web.Controllers
                 list.Add("Simple HTTP", endpoints.SimpleHttp.AbsoluteUri);
             }
 
+            // sitefinity
+            if (Configuration.Sitefinity.Enabled)
+            {
+                list.Add("Sitefinity", endpoints.Sitefinity.AbsoluteUri);
+            }
+
             return View(list);
         }
     }

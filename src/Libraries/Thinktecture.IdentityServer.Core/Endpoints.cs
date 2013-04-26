@@ -24,6 +24,7 @@ namespace Thinktecture.IdentityServer
         public Uri WSTrustMixedCertificate { get; set; }
 
         public Uri SimpleHttp { get; set; }
+        public Uri Sitefinity { get; set; }
         public Uri AdfsIntegration { get; set; }
         public Uri Wrap { get; set; }
         public Uri OAuth2Token { get; set; }
@@ -40,6 +41,7 @@ namespace Thinktecture.IdentityServer
             public const string PrivacyNotice = "privacyNotice.txt";
             public const string WSTrustBase = "issue/wstrust";
             public const string SimpleHttp = "issue/simple";
+            public const string Sitefinity = "issue/sitefinity";
             public const string Wrap = "issue/wrap";
             public const string OAuth2Token = "issue/oauth2/token";
             public const string OAuth2Callback = "issue/oauth2/callback";
@@ -100,6 +102,13 @@ namespace Thinktecture.IdentityServer
             builder.Scheme = Uri.UriSchemeHttps;
             builder.Port = httpsPort;
             ep.SimpleHttp = builder.Uri;
+
+            //Added by Richie Faville 4/15/2013
+            var sitefinity = new Uri(baseUriString + Paths.Sitefinity);
+            builder = new UriBuilder(sitefinity);
+            builder.Scheme = Uri.UriSchemeHttps;
+            builder.Port = httpsPort;
+            ep.Sitefinity = builder.Uri;
 
             var wrap = new Uri(baseUriString + Paths.Wrap);
             builder = new UriBuilder(wrap);

@@ -22,6 +22,7 @@ namespace Thinktecture.IdentityServer.Repositories.Sql
         public DbSet<OAuth2Configuration> OAuth2 { get; set; }
         public DbSet<AdfsIntegrationConfiguration> AdfsIntegration { get; set; }
         public DbSet<SimpleHttpConfiguration> SimpleHttp { get; set; }
+        public DbSet<SitefinityConfiguration> Sitefinity { get; set; }
         public DbSet<DiagnosticsConfiguration> Diagnostics { get; set; }
         
         public DbSet<ClientCertificates> ClientCertificates { get; set; }
@@ -34,7 +35,7 @@ namespace Thinktecture.IdentityServer.Repositories.Sql
         public static Func<IdentityServerConfigurationContext> FactoryMethod { get; set; }
 
         public IdentityServerConfigurationContext()
-            : base("name=IdentityServerConfiguration")
+            : base("IdentityServerConfiguration")
         { }
 
         public IdentityServerConfigurationContext(DbConnection conn) : base(conn, true)

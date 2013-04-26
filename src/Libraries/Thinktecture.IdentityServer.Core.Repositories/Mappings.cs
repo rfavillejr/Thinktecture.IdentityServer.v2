@@ -303,6 +303,24 @@ namespace Thinktecture.IdentityServer.Repositories.Sql
         }
         #endregion
 
+        #region SitefintyConfiguration
+        public static Models.Configuration.SitefinityConfiguration ToDomainModel(this Entities.Configuration.SitefinityConfiguration entity)
+        {
+            return new Models.Configuration.SitefinityConfiguration
+            {
+                Enabled = entity.Enabled
+            };
+        }
+
+        public static Entities.Configuration.SitefinityConfiguration ToEntity(this Models.Configuration.SitefinityConfiguration model)
+        {
+            return new Entities.Configuration.SitefinityConfiguration
+            {
+                Enabled = model.Enabled
+            };
+        }
+        #endregion
+
         #region DiagnosticsConfiguration
         public static Models.Configuration.DiagnosticsConfiguration ToDomainModel(this Entities.Configuration.DiagnosticsConfiguration entity)
         {
@@ -394,13 +412,7 @@ namespace Thinktecture.IdentityServer.Repositories.Sql
         {
             return
                 (from rp in relyingParties
-                 select new RelyingParty
-                 {
-                     Id = rp.Id.ToString(),
-                     Name = rp.Name,
-                     Realm = new Uri(rp.Realm),
-                     Enabled = rp.Enabled
-                 }).ToList();
+                 select rp.ToDomainModel()).ToList();
         }
         #endregion
 

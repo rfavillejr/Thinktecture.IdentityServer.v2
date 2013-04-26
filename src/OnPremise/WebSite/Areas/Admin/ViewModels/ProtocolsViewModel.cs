@@ -30,6 +30,10 @@ namespace Thinktecture.IdentityServer.Web.Areas.Admin.ViewModels
                 x => x.SimpleHttp,
                 (c, v) => { c.SimpleHttp = (SimpleHttpConfiguration)v; }));
             protocolMap.Add(new Tuple<string, Func<IConfigurationRepository, ProtocolConfiguration>, Action<IConfigurationRepository, ProtocolConfiguration>>(
+                "Sitefinity",
+                x => x.Sitefinity,
+                (c, v) => { c.Sitefinity = (SitefinityConfiguration)v; }));
+            protocolMap.Add(new Tuple<string, Func<IConfigurationRepository, ProtocolConfiguration>, Action<IConfigurationRepository, ProtocolConfiguration>>(
                 "OAuth2",
                 x => x.OAuth2,
                 (c, v) => { c.OAuth2 = (OAuth2Configuration)v; }));

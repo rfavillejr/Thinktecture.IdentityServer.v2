@@ -118,6 +118,7 @@
     <Compile Include="Shared\TokenResponse.cs" />
     <Compile Include="Shared\STS.cs" />
     <Compile Include="SimpleHTTP\SimpleHttpController.cs" />
+    <Compile Include="Sitefinity\SitefinityController.cs" />
     <Compile Include="WSFederation\HrdController.cs" />
     <Compile Include="WSFederation\HrdViewModel.cs" />
     <Compile Include="WSFederation\WSFederationController.cs" />
@@ -169,6 +170,9 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>WSFederationResult.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\Sitefinity\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\nuget.targets" />

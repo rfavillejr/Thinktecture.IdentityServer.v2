@@ -117,6 +117,16 @@ namespace Thinktecture.IdentityServer.Web
                     typeof(TokenServiceConfiguration))
                 );
             }
+
+            // sitefinity
+            if (configuration.Sitefinity.Enabled)
+            {
+                routes.MapRoute(
+                    "sitefinity",
+                    Thinktecture.IdentityServer.Endpoints.Paths.Sitefinity,
+                    new { controller = "Sitefinity", action = "issue" }
+                );
+            }
             #endregion
         }
 

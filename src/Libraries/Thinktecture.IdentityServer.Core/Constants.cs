@@ -29,7 +29,8 @@ namespace Thinktecture.IdentityServer
         {
             // issue actions
             public const string WSFederation = "WSFederation";
-            public const string SimpleHttp   = "SimpleHttp";
+            public const string SimpleHttp = "SimpleHttp";
+            public const string Sitefinity = "Sitefinity";
             public const string OAuth2       = "OAuth2";
             public const string WRAP         = "WRAP";
             public const string WSTrust      = "WSTrust";

@@ -3,6 +3,7 @@
  * see license.txt
  */
 
+using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Linq;
@@ -32,16 +33,26 @@ namespace Thinktecture.IdentityServer
         {
             var action = context.Action.First();
             var id = context.Principal.Identities.First();
-
+            Tracing.Verbose("Action Type: " + action.Type.ToString());
+            Tracing.Verbose("Claims: " + string.Join(",", id.Claims.Select(x => x.Type + ": " + x.Value)));
+            //try{
+            //    Tracing.Verbose("Prinicipal Identity: " + Newtonsoft.Json.JsonConvert.SerializeObject(id));
+            //}
+            //catch(Exception e)
+            //{
+            //    Tracing.Error(e.Message + " " + e.InnerException);
+            //}
             // if application authorization request
             if (action.Type.Equals(ClaimsAuthorization.ActionType))
             {
+                Tracing.Information("is application authorization request");
                 return AuthorizeCore(action, context.Resource, context.Principal.Identity as ClaimsIdentity);
             }
 
             // if ws-trust issue request
             if (action.Value.Equals(WSTrust13Constants.Actions.Issue))
             {
+                Tracing.Information("is ws-trust request");
                 return AuthorizeTokenIssuance(new Collection<Claim> { new Claim(ClaimsAuthorization.ResourceType, Constants.Resources.WSTrust) }, id);
             }
 
@@ -74,6 +85,7 @@ namespace Thinktecture.IdentityServer
                 return authResult;
             }
 
+            Tracing.Verbose("AuthorizeTokenIssuance - Claims: " + string.Join(",", id.Claims.Select(x => x.Type + ": " + x.Value)));
             var roleResult = id.HasClaim(ClaimTypes.Role, Constants.Roles.IdentityServerUsers);
             if (!roleResult)
             {
