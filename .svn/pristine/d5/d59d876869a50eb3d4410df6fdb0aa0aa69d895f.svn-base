@@ -1,7 +1,0 @@
-﻿<system.identityModel.services>
-  
-  <federationConfiguration>
-    <cookieHandler name="idsrvauth" />
-  </federationConfiguration>
-
-</system.identityModel.services>
