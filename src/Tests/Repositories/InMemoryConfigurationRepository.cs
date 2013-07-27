@@ -139,5 +139,18 @@ namespace Thinktecture.IdentityServer.Tests.Repositories
                 throw new NotImplementedException();
             }
         }
+
+
+        public OpenIdConnectConfiguration OpenIdConnect
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

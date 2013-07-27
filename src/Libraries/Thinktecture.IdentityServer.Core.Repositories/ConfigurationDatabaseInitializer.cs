@@ -6,6 +6,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity;
+using System.Linq;
 using Thinktecture.IdentityModel.Constants;
 using Thinktecture.IdentityServer.Repositories.Sql.Configuration;
 
@@ -13,12 +14,12 @@ namespace Thinktecture.IdentityServer.Repositories.Sql
 {
     public class ConfigurationDatabaseInitializer : CreateDatabaseIfNotExists<IdentityServerConfigurationContext>
     {
-        public static void SeedContext(IdentityServerConfigurationContext context)
+        public static void SeedContext(IdentityServerConfigurationContext context, bool loadTestData = false)
         {
             // test data
             var entry = ConfigurationManager.AppSettings["idsrv:CreateTestDataOnInitialization"];
 
-            if (entry != null)
+            if (loadTestData && entry != null)
             {
                 bool createData = false;
                 if (bool.TryParse(entry, out createData))
@@ -35,6 +36,7 @@ namespace Thinktecture.IdentityServer.Repositories.Sql
                         context.SimpleHttp.Add(CreateTestSimpleHttpConfiguration());
                         context.Sitefinity.Add(CreateTestSitefinityConfiguration());
                         context.Diagnostics.Add(CreateTestDiagnosticsConfiguration());
+                        context.OpenIdConnect.Add(CreateTestOpenIdConnectConfiguration());
 
                         // test data
                         CreateTestRelyingParties().ForEach(rp => context.RelyingParties.Add(rp));
@@ -42,6 +44,7 @@ namespace Thinktecture.IdentityServer.Repositories.Sql
                         CreateTestDelegationSettings().ForEach(d => context.Delegation.Add(d));
                         CreateTestClientCertificateSettings().ForEach(cc => context.ClientCertificates.Add(cc));
                         CreateTestClients().ForEach(c => context.Clients.Add(c));
+                        CreateTestOpenIdConnectClients().ForEach(c => context.OpenIdConnectClients.Add(c));
 
                         return;
                     }
@@ -49,20 +52,21 @@ namespace Thinktecture.IdentityServer.Repositories.Sql
             }
 
             // default configuration
-            context.GlobalConfiguration.Add(CreateDefaultGlobalConfiguration());
-            context.WSFederation.Add(CreateDefaultWSFederationConfiguration());
-            context.WSTrust.Add(CreateDefaultWSTrustConfiguration());
-            context.FederationMetadata.Add(CreateDefaultFederationMetadataConfiguration());
-            context.OAuth2.Add(CreateDefaultOAuth2Configuration());
-            context.AdfsIntegration.Add(CreateDefaultAdfsIntegrationConfiguration());
-            context.SimpleHttp.Add(CreateDefaultSimpleHttpConfiguration());
-            context.Sitefinity.Add(CreateDefaultSitefinityConfiguration());
-            context.Diagnostics.Add(CreateDefaultDiagnosticsConfiguration());
+            if (!context.GlobalConfiguration.Any()) context.GlobalConfiguration.Add(CreateDefaultGlobalConfiguration());
+            if (!context.WSFederation.Any()) context.WSFederation.Add(CreateDefaultWSFederationConfiguration());
+            if (!context.WSTrust.Any()) context.WSTrust.Add(CreateDefaultWSTrustConfiguration());
+            if (!context.FederationMetadata.Any()) context.FederationMetadata.Add(CreateDefaultFederationMetadataConfiguration());
+            if (!context.OAuth2.Any()) context.OAuth2.Add(CreateDefaultOAuth2Configuration());
+            if (!context.AdfsIntegration.Any()) context.AdfsIntegration.Add(CreateDefaultAdfsIntegrationConfiguration());
+            if (!context.SimpleHttp.Any()) context.SimpleHttp.Add(CreateDefaultSimpleHttpConfiguration());          
+            if (!context.Sitefinity.Any()) context.Sitefinity.Add(CreateDefaultSitefinityConfiguration());
+            if (!context.Diagnostics.Any()) context.Diagnostics.Add(CreateDefaultDiagnosticsConfiguration());
+            if (!context.OpenIdConnect.Any()) context.OpenIdConnect.Add(CreateOpenIdConnectConfiguration());
         }
 
         protected override void Seed(IdentityServerConfigurationContext context)
         {
-            SeedContext(context);
+            SeedContext(context, true);
             base.Seed(context);
         }
 
@@ -72,7 +76,7 @@ namespace Thinktecture.IdentityServer.Repositories.Sql
             return new GlobalConfiguration
             {
                 SiteName = "thinktecture identity server v2",
-                IssuerUri = "http://identityserver.v2.thinktecture.com/trust/changethis",
+                IssuerUri = "http://identityserver.v2.thinktecture.com/samples",
                 IssuerContactEmail = "office@thinktecture.com",
                 DefaultWSTokenType = TokenTypes.Saml2TokenProfile11,
                 DefaultHttpTokenType = TokenTypes.JsonWebToken,
@@ -171,6 +175,15 @@ namespace Thinktecture.IdentityServer.Repositories.Sql
                 EnableFederationMessageTracing = false
             };
         }
+
+        private static OpenIdConnectConfiguration CreateOpenIdConnectConfiguration()
+        {
+            return new OpenIdConnectConfiguration
+            {
+                Enabled = false
+            };
+        }
+
         #endregion
 
         #region Test Configuration
@@ -179,7 +192,7 @@ namespace Thinktecture.IdentityServer.Repositories.Sql
             return new GlobalConfiguration
             {
                 SiteName = "thinktecture identity server v2",
-                IssuerUri = "http://identityserver.v2.thinktecture.com/trust/changethis",
+                IssuerUri = "http://identityserver.v2.thinktecture.com/samples",
                 IssuerContactEmail = "office@thinktecture.com",
                 DefaultWSTokenType = TokenTypes.Saml2TokenProfile11,
                 DefaultHttpTokenType = TokenTypes.JsonWebToken,
@@ -281,6 +294,15 @@ namespace Thinktecture.IdentityServer.Repositories.Sql
                 EnableFederationMessageTracing = true
             };
         }
+
+        private static OpenIdConnectConfiguration CreateTestOpenIdConnectConfiguration()
+        {
+            return new OpenIdConnectConfiguration
+            {
+                Enabled = true
+            };
+        }
+
         #endregion
 
         #region Test Data
@@ -314,7 +336,14 @@ namespace Thinktecture.IdentityServer.Repositories.Sql
                     Name = "Test RP (Asymmetric Key)",
                     Enabled = true,
                     Realm = "urn:test:asymmetric",
-                }
+                },
+                new RelyingParties
+                {
+                    Name = "Authorization Server",
+                    Enabled = true,
+                    Realm = "urn:authorizationserver",
+                    ReplyTo = "https://as.local"
+                },
             };
         }
 
@@ -444,6 +473,28 @@ namespace Thinktecture.IdentityServer.Repositories.Sql
                 }
             };
         }
+
+        private static List<OpenIdConnectClientEntity> CreateTestOpenIdConnectClients()
+        {
+            return new List<OpenIdConnectClientEntity>()
+            {
+                new OpenIdConnectClientEntity{
+                    ClientId="oidccode", 
+                    ClientSecret=Thinktecture.IdentityServer.Helper.CryptoHelper.HashPassword("secret"), 
+                    Name="oidccode sample",
+                    AccessTokenLifetime=60,
+                    AllowRefreshToken=true, 
+                    RefreshTokenLifetime=1440,
+                    RequireConsent = false,
+                    RedirectUris = new HashSet<OpenIdConnectClientRedirectUri>()
+                    {
+                        new OpenIdConnectClientRedirectUri { RedirectUri = "https://localhost/CodeFlowClient/oidccallback" },
+                        new OpenIdConnectClientRedirectUri { RedirectUri = "https://localhost:44309/oidccallback" }
+                    }
+                }
+            };
+        }
+
         #endregion
     }
 }

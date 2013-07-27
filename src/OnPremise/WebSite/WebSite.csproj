@@ -210,6 +210,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ShowConsent.Mobile.cshtml.resx</DependentUpon>
     </Compile>
+    <Compile Include="App_LocalResources\OidcAuthorize\Consent.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Consent.resx</DependentUpon>
+    </Compile>
     <Compile Include="App_LocalResources\Shared\Confirm.cshtml.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -420,6 +425,7 @@
       <DependentUpon>_ViewStart.cshtml.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Admin\Controllers\ClientCertificateController.cs" />
+    <Compile Include="Areas\Admin\Controllers\OpenIdConnectClientController.cs" />
     <Compile Include="Areas\Admin\Controllers\OAuthClientController.cs" />
     <Compile Include="Areas\Admin\Controllers\DelegationController.cs" />
     <Compile Include="Areas\Admin\Controllers\DiagnosticsController.cs" />
@@ -463,6 +469,11 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ClientCertificatesViewModel.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Areas\Admin\Resources\OpenIdConnectClientController.Designer.cs">
+      <DependentUpon>OpenIdConnectClientController.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="Areas\Admin\Resources\ProfilePropertyViewModel.Designer.cs">
       <DependentUpon>ProfilePropertyViewModel.resx</DependentUpon>
@@ -629,6 +640,8 @@
     <Compile Include="Areas\Admin\ViewModels\ClientCertificatesForUserViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\ClientCertificatesViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\CertificateInputModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\OpenIdConnectClientIndexViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\OpenIdConnectClientViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\MenuViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\OAuthClientIndexViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\DelegationSettingsForUserInputModel.cs" />
@@ -692,6 +705,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\dummy.txt" />
+    <EmbeddedResource Include="App_LocalResources\OidcAuthorize\Consent.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Consent.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Areas\Admin\Resources\CertificateInputModel.fr.resx">
       <DependentUpon>CertificateInputModel.resx</DependentUpon>
     </EmbeddedResource>
@@ -733,6 +750,13 @@
     <EmbeddedResource Include="Areas\Admin\Resources\ClientCertificatesViewModel.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ClientCertificatesViewModel.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Admin\Resources\Copy of OAuthClientController.fr.resx">
+      <DependentUpon>OpenIdConnectClientController.resx</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Admin\Resources\OpenIdConnectClientController.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>OpenIdConnectClientController.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Areas\Admin\Resources\ProfilePropertyViewModel.fr.resx">
       <DependentUpon>ProfilePropertyViewModel.resx</DependentUpon>
@@ -1167,6 +1191,8 @@
     <Content Include="Areas\Admin\Views\Protocol\ADFSIntegration.cshtml" />
     <None Include="Properties\PublishProfiles\Default Settings %282%29.pubxml" />
     <None Include="Properties\PublishProfiles\Default Settings.pubxml" />
+    <Content Include="Areas\Admin\Views\OpenIdConnectClient\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\OpenIdConnectClient\Index.cshtml" />
     <None Include="Scripts\jquery-1.8.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.8.2.js" />
     <Content Include="Scripts\jquery-1.8.2.min.js" />
@@ -1188,6 +1214,8 @@
     <Content Include="Views\OAuth2Authorize\ShowConsent.cshtml" />
     <Content Include="Views\OAuth2Authorize\Error.Mobile.cshtml" />
     <Content Include="Views\OAuth2Authorize\ShowConsent.Mobile.cshtml" />
+    <Content Include="Views\OidcAuthorize\Consent.cshtml" />
+    <Content Include="Views\OidcAuthorize\ValidationError.cshtml" />
     <None Include="_bin_deployableAssemblies\x86\sqlcese40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceqp40.dll" />
     <None Include="_bin_deployableAssemblies\x86\sqlceme40.dll" />

@@ -206,6 +206,31 @@ namespace Thinktecture.IdentityServer.Configuration
 
         #endregion
 
+        #region OpenIdConnectClientsRepository Property
+
+        /// <summary>
+        /// The XML name of the <see cref="ConfigurationProvider"/> property.
+        /// </summary>
+        internal const global::System.String OpenIdConnectClientsRepositoryPropertyName = "openIdConnectClientsRepository";
+
+        /// <summary>
+        /// Gets or sets type of the class that provides encryption certificates
+        /// </summary>
+        [global::System.Configuration.ConfigurationProperty(OpenIdConnectClientsRepositoryPropertyName, IsRequired = false, IsKey = false, IsDefaultCollection = false, DefaultValue = "Thinktecture.IdentityServer.Repositories.Sql.OpenIdConnectClientsRepository, Thinktecture.IdentityServer.Core.Repositories")]
+        public global::System.String OpenIdConnectClientsRepository
+        {
+            get
+            {
+                return (global::System.String)base[OpenIdConnectClientsRepositoryPropertyName];
+            }
+            set
+            {
+                base[OpenIdConnectClientsRepositoryPropertyName] = value;
+            }
+        }
+
+        #endregion
+
         #region CodeTokenRepository Property
 
         /// <summary>
@@ -226,6 +251,28 @@ namespace Thinktecture.IdentityServer.Configuration
             set
             {
                 base[CodeTokenRepositoryPropertyName] = value;
+            }
+        }
+
+        #endregion
+
+        #region StoredGrantRepository Property
+
+        /// <summary>
+        /// The XML name of the <see cref="ConfigurationProvider"/> property.
+        /// </summary>
+        internal const global::System.String StoredGrantRepositoryPropertyName = "storedGrantRepository";
+
+        [global::System.Configuration.ConfigurationProperty(StoredGrantRepositoryPropertyName, IsRequired = false, IsKey = false, IsDefaultCollection = false, DefaultValue = "Thinktecture.IdentityServer.Repositories.Sql.StoredGrantRepository, Thinktecture.IdentityServer.Core.Repositories")]
+        public global::System.String StoredGrantRepository
+        {
+            get
+            {
+                return (global::System.String)base[StoredGrantRepositoryPropertyName];
+            }
+            set
+            {
+                base[StoredGrantRepositoryPropertyName] = value;
             }
         }
 

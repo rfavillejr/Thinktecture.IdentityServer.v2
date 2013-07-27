@@ -183,4 +183,10 @@
   <data name="EncryptingCertificateThumbprintDescription" xml:space="preserve">
     <value>Encrypting Certificate Thumbprint</value>
   </data>
+  <data name="TokenType" xml:space="preserve">
+    <value>Token Type</value>
+  </data>
+  <data name="TokenTypeDescription" xml:space="preserve">
+    <value>Token type to issue for this replying party.</value>
+  </data>
 </root>
