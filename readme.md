@@ -60,8 +60,30 @@ Make sure that the url in the security config you entered in step one is the exa
 the Site ID field in the General Configuration area of IdentityServer. Also make sure you
 entered the Symmetric key correctly.
 
+10. To get logging out working on the administrative side of Sitefinity, use the following url rewrite rule
+in your web.config:
+```
+	<rewrite>
+		<rules>
+		   <rule name="Sitefinity STS Signout" stopProcessing="true">
+			  <match url="^sitefinity/signout$" />
+			  <conditions>
+				 <add input="{QUERY_STRING}" pattern="sts_signout=true" negate="true" />
+			  </conditions>
+			  <action type="Redirect" url="/Sitefinity/Signout?sts_signout=true" appendQueryString="true" redirectType="Temporary" />
+		   </rule>
+		</rules>
+	 </rewrite>
+```
 Most likely in a real world scenario you will need a new membership provider at the very
 least; the above steps are just to get you going. Enjoy and let me know if you have any
 issues!
 
-*Note this has only been tested on Sitefinity 5.4.4010.0 and Sitefinity 6.0.4100.0 at the moment.
+*Works with version 5.4.4010.0, 6.0.4100.0, and 6.1.4300 at the moment. If there's a version
+you find that doesn't work, let me know.
+
+Check out my blog posts for more information:
+
+http://rfavillejr.com/blog/05-16-13/sitefinity-and-identity-server
+
+http://rfavillejr.com/blog/07-27-13/logging-out-of-identityserver-from-sitefinity
