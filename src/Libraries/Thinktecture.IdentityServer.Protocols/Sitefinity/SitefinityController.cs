@@ -54,6 +54,19 @@ namespace Thinktecture.IdentityServer.Protocols.Sitefinity
             var tokenType = query[query.AllKeys.FirstOrDefault(p => p.Equals("tokenType", System.StringComparison.OrdinalIgnoreCase))];
             var reply = query[query.AllKeys.FirstOrDefault(p => p.Equals("redirect_uri", System.StringComparison.OrdinalIgnoreCase))];
             var deflateTemp = query[query.AllKeys.FirstOrDefault(p => p.Equals("deflate", System.StringComparison.OrdinalIgnoreCase))];
+            var isSignout = query[query.AllKeys.FirstOrDefault(p => p.Equals("sign_out", System.StringComparison.OrdinalIgnoreCase))];
+
+            //if this is a signout request, sign out the user and redirect
+            if (!string.IsNullOrWhiteSpace(isSignout))
+            {
+                Tracing.Verbose("Sitefinity signout request detected - signout var = " + isSignout);
+                if (isSignout.Equals("true", StringComparison.OrdinalIgnoreCase))
+                {
+                    Tracing.Verbose("Sitefinity logout request");
+                    FederatedAuthentication.SessionAuthenticationModule.SignOut();
+                    return Redirect((new Uri(new Uri(realm), reply)).AbsoluteUri);
+                }
+            }
 
             if (string.IsNullOrWhiteSpace(deflateTemp))
                 deflateTemp = "false";
