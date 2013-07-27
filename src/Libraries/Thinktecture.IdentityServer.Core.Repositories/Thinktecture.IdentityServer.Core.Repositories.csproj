@@ -228,6 +228,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations.SqlServer\201304161420585_AddSitefinity.resx">
       <DependentUpon>201304161420585_AddSitefinity.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Migrations.SqlCe\201307221743397_StoredGrants.resx">
       <DependentUpon>201307221743397_StoredGrants.cs</DependentUpon>
     </EmbeddedResource>
