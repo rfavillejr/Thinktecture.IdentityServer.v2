@@ -167,6 +167,24 @@ namespace Thinktecture.IdentityServer.Protocols.WSFederation
 
             return ProcessOAuthResponse(cp, ctx);
         }
+
+        [HttpGet]
+        public ActionResult SignoutRedirect(string rp)
+        {
+            if (!String.IsNullOrWhiteSpace(rp))
+            {
+                try
+                {
+                    var bytes = Convert.FromBase64String(rp);
+                    bytes = System.Web.Security.MachineKey.Unprotect(bytes);
+                    var url = System.Text.Encoding.UTF8.GetString(bytes);
+                    return Redirect(url);
+                }
+                catch { }
+            }
+            return ShowSignOutPage(null);
+        }
+        
         #endregion
 
         #region Helper
@@ -212,12 +230,40 @@ namespace Thinktecture.IdentityServer.Protocols.WSFederation
             }
 
             var signOutMessage = new SignOutRequestMessage(new Uri(idp));
-            if (!string.IsNullOrWhiteSpace(message.Reply))
+            if (!string.IsNullOrWhiteSpace(message.Reply) && IsValidReplyTo(message.Reply))
             {
-                signOutMessage.Reply = message.Reply;
+                var bytes = System.Text.Encoding.UTF8.GetBytes(message.Reply);
+                bytes = System.Web.Security.MachineKey.Protect(bytes);
+                var param = Url.Encode(Convert.ToBase64String(bytes));
+
+                var host = this.ConfigurationRepository.Global.PublicHostName;
+                if (String.IsNullOrWhiteSpace(host))
+                {
+                    host = Request.Headers["host"];
+                }
+
+                var builder = new UriBuilder();
+                builder.Host = host;
+                builder.Scheme = Uri.UriSchemeHttps;
+                if (this.ConfigurationRepository.Global.HttpsPort != 443)
+                {
+                    builder.Port = this.ConfigurationRepository.Global.HttpsPort;
+                }
+                builder.Path = Request.ApplicationPath;
+                if (!builder.Path.EndsWith("/")) builder.Path += "/";
+                builder.Path += Thinktecture.IdentityServer.Endpoints.Paths.WSFedHRDSignoutRedirect;
+                builder.Query = "rp=" + param;
+                signOutMessage.Reply = builder.ToString();
             }
 
             return Redirect(signOutMessage.WriteQueryString());
+        }
+
+        private bool IsValidReplyTo(string url)
+        {
+            // check to see if the URL is in the RPs we've logged into
+            var mgr = new SignInSessionsManager(HttpContext, _cookieName, ConfigurationRepository.Global.MaximumTokenLifetime);
+            return mgr.ContainsUrl(url);
         }
 
         private ActionResult ProcessWSFedSignOutCleanupRequest(SignOutCleanupRequestMessage message)
@@ -227,14 +273,15 @@ namespace Thinktecture.IdentityServer.Protocols.WSFederation
 
         private ActionResult ShowSignOutPage(string returnUrl)
         {
+            var mgr = new SignInSessionsManager(HttpContext, _cookieName);
+
             // check for return url
-            if (!string.IsNullOrWhiteSpace(returnUrl))
+            if (!string.IsNullOrWhiteSpace(returnUrl) && mgr.ContainsUrl(returnUrl))
             {
                 ViewBag.ReturnUrl = returnUrl;
             }
 
             // check for existing sign in sessions
-            var mgr = new SignInSessionsManager(HttpContext, _cookieName);
             var realms = mgr.GetEndpoints();
             mgr.ClearEndpoints();
 
@@ -280,6 +327,8 @@ namespace Thinktecture.IdentityServer.Protocols.WSFederation
                     return new OAuth2ActionResult(oauth2, ProviderType.Facebook, null);
                 case OAuth2ProviderTypes.Live:
                     return new OAuth2ActionResult(oauth2, ProviderType.Live, null);
+                case OAuth2ProviderTypes.LinkedIn:
+                    return new OAuth2ActionResult(oauth2, ProviderType.LinkedIn, null);
             }
 
             return View("Error");
@@ -339,6 +388,7 @@ namespace Thinktecture.IdentityServer.Protocols.WSFederation
                 case OAuth2ProviderTypes.Facebook: return ProviderType.Facebook;
                 case OAuth2ProviderTypes.Live: return ProviderType.Live;
                 case OAuth2ProviderTypes.Google: return ProviderType.Google;
+                case OAuth2ProviderTypes.LinkedIn: return ProviderType.LinkedIn;
                 default: throw new Exception("Invalid OAuthProfileTypes");
             }
         }
